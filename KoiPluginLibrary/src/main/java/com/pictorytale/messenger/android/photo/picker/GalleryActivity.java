@@ -50,58 +50,16 @@ public class GalleryActivity extends Activity {
 					Utils.hideProgressIndicator();
 					if (!cropLaunched) {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, copiedFileUri, Plugin.cropWidth, Plugin.cropHeight);
-						bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
-						Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, null);
+						if (bitmap != null) {
+							bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
+							Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, null);
+						} else {
+							Plugin.instance.backToUnity(this);
+						}
 					}
 				} else {
 					Plugin.instance.backToUnity(this);
 				}
-
-				//				String decodedImageName = "decodedImage.jpeg";
-				//				Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, copiedFileUri, Plugin.reqImageWidth, Plugin.reqImageWidth);
-				//				copiedFile.delete();
-				//				byte[] byteArray = Utils.compressBitmapToJPEGByteArray(bitmap);
-				//				File imageFile = Utils.saveBitmapToExternalFilesDir(this, byteArray, decodedImageName);
-				//				Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, byteArray);
-
-
-				//				File file = new File(imageUri.getPath());
-				//				Log.e("file.absolutePath",file.getAbsolutePath());
-				//				try {
-				//					InputStream inputStream = this.getContentResolver().openInputStream(imageUri);
-				//					Bitmap bitmap = Utils.decodeSampledBitmapFromInputStream(inputStream, Plugin.reqImageWidth, Plugin.reqImageWidth);
-				//					inputStream.close();
-				//					if (bitmap != null) {
-				//						String fileName = "selectedFile.jpeg";
-				//
-				//						byte[] byteArray = Utils.compressBitmapToJPEGByteArray(bitmap);
-				//						File imageFile = Utils.saveBitmapToExternalFilesDir(this, byteArray, fileName);
-				//
-				//						String createdFilePath = Utils.getPath(this, Uri.fromFile(imageFile));
-				//						Log.e("createFilePath", createdFilePath);
-				//
-				//						ExifInterface exif = new ExifInterface(createdFilePath);
-				//						int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-				//
-				//						bitmap = Utils.rotateBitmapWithExifOrientation(bitmap, orientation);
-				//						byteArray = Utils.compressBitmapToJPEGByteArray(bitmap);
-				//						imageFile = Utils.saveBitmapToExternalFilesDir(this, byteArray, fileName);
-				//
-				//						Log.e("createdFileUri", Uri.fromFile(imageFile).toString());
-				//						boolean cropLaunched = Plugin.instance.launchCropActivity(null, Uri.fromFile(imageFile));
-				//						if (!cropLaunched) {
-				//							Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, byteArray);
-				//						}
-				//					} else {
-				//						Plugin.instance.backToUnity(this);
-				//					}
-				//				} catch (FileNotFoundException e) {
-				//					e.printStackTrace();
-				//					Plugin.instance.backToUnity(this);
-				//				} catch (IOException e) {
-				//					e.printStackTrace();
-				//					Plugin.instance.backToUnity(this);
-				//				}
 			}
 
 		} else if (resultCode == RESULT_CANCELED) {

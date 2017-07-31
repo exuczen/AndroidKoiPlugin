@@ -42,7 +42,9 @@ public class Plugin {
 
 	public static String copiedFileName = "copiedFileFromGallery.jpeg";
 
-	public static String cropFileName = "cropFileFileFromGalleryOrCamera.jpeg";
+	public static String cropFileName = "cropFileFromGalleryOrCamera.jpeg";
+
+	public static String photoFileName = "photoFileTakenWithCamera.jpeg";
 
 	public static int cropWidth = 256;
 	public static int cropHeight = 256;

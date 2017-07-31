@@ -27,31 +27,25 @@ public class CropActivity extends Activity {
     private void CropImageFromUri(Uri uri) {
         Log.e("CropImageFromUri", uri.getPath());
         // Image Crop Code
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        cropIntent.setDataAndType(uri, "image/*");
+        cropIntent.putExtra("crop", "true");
+        cropIntent.putExtra("outputX", Plugin.cropWidth);
+        cropIntent.putExtra("outputY", Plugin.cropHeight);
+        cropIntent.putExtra("aspectX", Plugin.cropWidth);
+        cropIntent.putExtra("aspectY", Plugin.cropHeight);
+        cropIntent.putExtra("scale", true);
+        cropIntent.putExtra("scaleUpIfNeeded", true);
+        //cropIntent.putExtra("return-data", true);
+
+        cropFile = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), Plugin.cropFileName);
         try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-
-            cropIntent.setDataAndType(uri, "image/*");
-
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("outputX", Plugin.cropWidth);
-            cropIntent.putExtra("outputY", Plugin.cropHeight);
-            cropIntent.putExtra("aspectX", Plugin.cropWidth);
-            cropIntent.putExtra("aspectY", Plugin.cropHeight);
-            cropIntent.putExtra("scale", true);
-            cropIntent.putExtra("scaleUpIfNeeded", true);
-            //cropIntent.putExtra("return-data", true);
-
-            cropFile = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), Plugin.cropFileName);
             cropFile.createNewFile();
-            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropFile));
-
-            startActivityForResult(cropIntent, Plugin.CROP_IMAGE_REQUEST_CODE);
-
-        } catch (ActivityNotFoundException e) {
-            Log.e("CropImageFromUri",e.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropFile));
+        startActivityForResult(cropIntent, Plugin.CROP_IMAGE_REQUEST_CODE);
     }
 
     @Override
