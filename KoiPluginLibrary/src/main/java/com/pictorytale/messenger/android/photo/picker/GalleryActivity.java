@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 
 import java.io.File;
@@ -15,6 +16,8 @@ public class GalleryActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+		StrictMode.setVmPolicy(builder.build());
 		openGallery();
 	}
 
