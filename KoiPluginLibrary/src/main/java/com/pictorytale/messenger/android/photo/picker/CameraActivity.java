@@ -52,6 +52,7 @@ public class CameraActivity extends Activity {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, photoUri, Plugin.cropWidth, Plugin.cropHeight);
 						if (bitmap != null) {
 							bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
+							//bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
 							Plugin.instance.backToUnity(this, Plugin.CAMERA_CALLBACK, bitmap, null);
 						} else {
 							Plugin.instance.backToUnity(this);

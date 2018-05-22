@@ -55,6 +55,7 @@ public class GalleryActivity extends Activity {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, copiedFileUri, Plugin.cropWidth, Plugin.cropHeight);
 						if (bitmap != null) {
 							bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
+							//bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
 							Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, null);
 						} else {
 							Plugin.instance.backToUnity(this);

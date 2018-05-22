@@ -205,26 +205,25 @@ public class Utils {
         Log.e("decodeSBitmapFromUri", "pictureUri=" + uri);
         Log.e("decodeSBitmapFromUri", "picturePath=" + picturePath);
         Bitmap bitmap = null;
-
-        if (picturePath != null) {
-            bitmap = Utils.decodeSampledBitmapFromFilePath(picturePath, reqWidth, reqHeight);
-            try {
-                ExifInterface exif = new ExifInterface(picturePath);
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-                bitmap = Utils.rotateBitmapWithExifOrientation(bitmap, orientation);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                InputStream inputStream = context.getContentResolver().openInputStream(uri);
-                bitmap = Utils.decodeSampledBitmapFromInputStream(inputStream, reqWidth, reqHeight);
-                inputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        //        if (picturePath != null) {
+        //            bitmap = Utils.decodeSampledBitmapFromFilePath(picturePath, reqWidth, reqHeight);
+        //            try {
+        //                ExifInterface exif = new ExifInterface(picturePath);
+        //                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        //                bitmap = Utils.rotateBitmapWithExifOrientation(bitmap, orientation);
+        //            } catch (IOException e) {
+        //                e.printStackTrace();
+        //            }
+        //        } else {
+        //        }
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            bitmap = Utils.decodeSampledBitmapFromInputStream(inputStream, reqWidth, reqHeight);
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return bitmap;
     }
