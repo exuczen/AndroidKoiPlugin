@@ -40,7 +40,7 @@ public class GalleryActivity extends Activity {
 
 		if (resultCode == RESULT_OK && data != null) {
 
-			if (requestCode == Plugin.PICK_IMAGE_REQUEST_CODE) {
+			if (requestCode == Plugin.PICK_IMAGE_REQUEST_CODE && !Plugin.cropActivityIsLaunching) {
 				Utils.showProgressIndicator(this);
 				Uri imageUri = data.getData();
 

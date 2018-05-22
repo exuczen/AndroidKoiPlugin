@@ -41,7 +41,7 @@ public class CameraActivity extends Activity {
 
 		if (resultCode == RESULT_OK /*&& data != null*/) {
 
-			if (requestCode == Plugin.TAKE_PHOTO_REQUEST_CODE) {
+			if (requestCode == Plugin.TAKE_PHOTO_REQUEST_CODE && !Plugin.cropActivityIsLaunching) {
 				//				Bundle bundle = data.getExtras();
 				//				Bitmap bitmap = (Bitmap)bundle.get("data");
 				if (photoFile != null && photoFile.exists()) {

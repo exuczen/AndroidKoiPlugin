@@ -25,6 +25,7 @@ public class CropActivity extends Activity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         CropImageFromUri(getIntent().getData());
+        Plugin.cropActivityIsLaunching = false;
     }
 
     private void CropImageFromUri(Uri uri) {

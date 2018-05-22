@@ -51,6 +51,8 @@ public class Plugin {
 
 	public static Plugin instance = new Plugin();
 
+	public static boolean cropActivityIsLaunching;
+
 	public Context unityActivity;
 
 	/**
@@ -140,6 +142,7 @@ public class Plugin {
 	}
 
 	public boolean launchCropActivity(Context context, Uri uri) {
+		cropActivityIsLaunching = true;
 		if (context == null)
 			context = unityActivity;
 		try {
@@ -148,6 +151,7 @@ public class Plugin {
 			context.startActivity(intent);
 			return true;
 		} catch (Exception e) {
+			cropActivityIsLaunching = false;
 			e.printStackTrace();
 			return false;
 		}
