@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 
 public class Plugin {
@@ -55,7 +56,11 @@ public class Plugin {
 
 	public static boolean cropActivityIsLaunching;
 
-	public static Context unityActivity;
+	private static Context unityActivity;
+
+	private static Class unityActivityClass;
+
+	private static String unityActivityClassName;
 
 	/**
 	 * this method is called in Unity
@@ -139,6 +144,8 @@ public class Plugin {
 
 	private void launchAndroidActivity(Context context, Class<?> activityClass) {
 		unityActivity = context;
+		unityActivityClass = unityActivity.getClass();
+		unityActivityClassName = unityActivityClass.getName();
 		Intent myIntent = new Intent(context, activityClass);
 		context.startActivity(myIntent);
 	}
@@ -207,8 +214,16 @@ public class Plugin {
 	*/
 	public void backToUnity(Activity androidActivity){
 		Utils.hideProgressIndicator();
-		Intent myIntent = new Intent(androidActivity, UnityPlayer.class);
-		unityActivity.startActivity(myIntent);
+		if (unityActivityClass == null && unityActivityClassName != null) {
+			try {
+				unityActivityClass = Class.forName(unityActivityClassName);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.e(TAG, "backToUnity: unityActivityClass: " + unityActivityClass);
+		Intent myIntent = new Intent(androidActivity, unityActivityClass);
+		androidActivity.startActivity(myIntent);
 	}
 	
 	/**
