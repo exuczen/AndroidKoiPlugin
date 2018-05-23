@@ -55,7 +55,7 @@ public class Plugin {
 
 	public static boolean cropActivityIsLaunching;
 
-	public Context unityActivity;
+	public static Context unityActivity;
 
 	/**
 	 * this method is called in Unity
@@ -91,7 +91,6 @@ public class Plugin {
 	public void cleanUp(){
 		pluginData = null;
 		unityActivity = null;
-		instance.unityActivity = null;
 	}
 
 	/**
@@ -126,8 +125,8 @@ public class Plugin {
 	}
 
 	public boolean launchActivityWithIntent(Context context, Class<?> activityClass) {
-		if (context == null && instance.unityActivity != null)
-			context = instance.unityActivity;
+		if (context == null && unityActivity != null)
+			context = unityActivity;
 		try {
 			Intent intent = new Intent(context, activityClass);
 			context.startActivity(intent);
@@ -139,8 +138,7 @@ public class Plugin {
 	}
 
 	private void launchAndroidActivity(Context context, Class<?> activityClass) {
-		this.unityActivity = context;
-		instance.unityActivity = context;
+		unityActivity = context;
 		Intent myIntent = new Intent(context, activityClass);
 		context.startActivity(myIntent);
 	}
@@ -148,8 +146,8 @@ public class Plugin {
 	public boolean launchCropActivity(Context context, Uri uri, boolean startOnUnityActivityContext) {
 		cropActivityIsLaunching = true;
 		String originalContextClassName = context != null ? context.getClass().getName() : "";
-		if (context == null || (startOnUnityActivityContext && instance.unityActivity != null)) {
-			context = instance.unityActivity;
+		if (context == null || (startOnUnityActivityContext && unityActivity != null)) {
+			context = unityActivity;
 		}
 		try {
 			Intent intent = new Intent(context, CropActivity.class);
@@ -209,8 +207,8 @@ public class Plugin {
 	*/
 	public void backToUnity(Activity androidActivity){
 		Utils.hideProgressIndicator();
-		Intent myIntent = new Intent(androidActivity, instance.unityActivity.getClass());
-		instance.unityActivity.startActivity(myIntent);
+		Intent myIntent = new Intent(androidActivity, UnityPlayer.class);
+		unityActivity.startActivity(myIntent);
 	}
 	
 	/**
