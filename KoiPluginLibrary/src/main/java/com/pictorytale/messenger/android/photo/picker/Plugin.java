@@ -146,7 +146,7 @@ public class Plugin {
 	public boolean launchCropActivity(Context context, Uri uri, boolean startOnUnityActivityContext) {
 		cropActivityIsLaunching = true;
 		String originalContextClassName = context != null ? context.getClass().getName() : "";
-		if (context == null || (startOnUnityActivityContext && unityActivity != null)) {
+		if ((context == null || startOnUnityActivityContext) && unityActivity != null) {
 			context = unityActivity;
 		}
 		try {
