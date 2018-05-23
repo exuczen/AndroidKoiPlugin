@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,11 +22,35 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
 public class Utils {
+
+    public static String getFileExtensionFromUrl(String url) {
+        return MimeTypeMap.getFileExtensionFromUrl(url);
+    }
+
+    public static String getMimeTypeFromUri(Context context, Uri uri) {
+        String mimeType = null;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = context.getContentResolver();
+            mimeType = cr.getType(uri);
+        }
+        return mimeType;
+    }
+
+    public static String getMimeTypeFromFilePath(String filePath) {
+        String mimeType = null;
+        String fileExtension = getFileExtensionFromUrl(filePath);
+        if (!TextUtils.isEmpty(fileExtension)) {
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+        }
+        return mimeType;
+    }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getPath(final Context context, final Uri uri) {
@@ -205,25 +230,35 @@ public class Utils {
         Log.e("decodeSBitmapFromUri", "pictureUri=" + uri);
         Log.e("decodeSBitmapFromUri", "picturePath=" + picturePath);
         Bitmap bitmap = null;
-        //        if (picturePath != null) {
-        //            bitmap = Utils.decodeSampledBitmapFromFilePath(picturePath, reqWidth, reqHeight);
-        //            try {
-        //                ExifInterface exif = new ExifInterface(picturePath);
-        //                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-        //                bitmap = Utils.rotateBitmapWithExifOrientation(bitmap, orientation);
-        //            } catch (IOException e) {
-        //                e.printStackTrace();
-        //            }
-        //        } else {
-        //        }
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            bitmap = Utils.decodeSampledBitmapFromInputStream(inputStream, reqWidth, reqHeight);
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(picturePath)) {
+            bitmap = Utils.decodeSampledBitmapFromFilePath(picturePath, reqWidth, reqHeight);
+            if (bitmap != null) {
+                String mimeType = getMimeTypeFromUri(context, uri);
+                if (TextUtils.isEmpty(mimeType))
+                    mimeType = getMimeTypeFromFilePath(picturePath);
+                Log.e("decodeSBitmapFromUri", "mimeType: " + mimeType);
+                String jpegMimeType = "image/jpeg";
+                if (!TextUtils.isEmpty(mimeType) && mimeType.equalsIgnoreCase(jpegMimeType))
+                {
+                    try {
+                        ExifInterface exif = new ExifInterface(picturePath);
+                        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                        bitmap = Utils.rotateBitmapWithExifOrientation(bitmap, orientation);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            try {
+                InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                bitmap = Utils.decodeSampledBitmapFromInputStream(inputStream, reqWidth, reqHeight);
+                inputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return bitmap;
     }

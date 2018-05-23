@@ -44,7 +44,7 @@ public class Plugin {
 	//The name of the GameObject in Unity's Scene which is used to communicate with this Plugin
 	private static String unityGameObjectName = "PhotoPicker";
 
-	public static String copiedFileName = "copiedFileFromGallery.jpeg";
+	public static String copiedFileName = "copiedFileFromGallery";
 
 	public static String cropFileName = "cropFileFromGalleryOrCamera.jpeg";
 
@@ -217,8 +217,9 @@ public class Plugin {
 		Log.e(TAG, "backToUnity: unityActivityClass: " + unityActivityClass);
 		Log.e(TAG, "backToUnity: unityActivityClassName: " + unityActivityClassName);
 		if (unityActivityClass == null) {
-			if (unityActivityClassName == null)
+			if (TextUtils.isEmpty(unityActivityClassName)) {
 				unityActivityClassName = "com.pictorytale.messenger.android.PictoryTaleUnityPlayerActivity";
+			}
 			try {
 				unityActivityClass = Class.forName(unityActivityClassName);
 			} catch (ClassNotFoundException e) {

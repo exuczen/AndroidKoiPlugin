@@ -7,6 +7,7 @@ import android.net.Uri;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -43,19 +44,24 @@ public class GalleryActivity extends Activity {
 			if (requestCode == Plugin.PICK_IMAGE_REQUEST_CODE && !Plugin.cropActivityIsLaunching) {
 				Utils.showProgressIndicator(this);
 				Uri imageUri = data.getData();
-
-				File copiedFile = Utils.copyImageFileToExternalFilesDir(this, imageUri, Plugin.copiedFileName);
-				Log.e("copiedFile","copiedFileExists="+copiedFile.exists());
+				String imagePath = Utils.getPath(this, imageUri);
+				imagePath = TextUtils.isEmpty(imagePath) ? "" : imagePath;
+				String imageExtension = Utils.getFileExtensionFromUrl(imagePath);
+				Log.e("GalleryActivity", "imagePath=" + imagePath);
+				Log.e("GalleryActivity", "imageExtension=" + imageExtension);
+				String copiedFileName = TextUtils.concat(Plugin.copiedFileName, ".", imageExtension).toString();
+				File copiedFile = Utils.copyImageFileToExternalFilesDir(this, imageUri, copiedFileName);
+				Log.e("GalleryActivity", "copiedFileExists=" + copiedFile.exists());
 				if (copiedFile.exists()) {
 					Uri copiedFileUri = Uri.fromFile(copiedFile);
-					Log.e("copiedFile","copiedFileUri="+copiedFileUri);
+					Log.e("GalleryActivity", "copiedFileUri=" + copiedFileUri);
 					boolean cropLaunched = Plugin.instance.launchCropActivity(this, copiedFileUri, true);
 					Utils.hideProgressIndicator();
 					if (!cropLaunched) {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, copiedFileUri, Plugin.cropWidth, Plugin.cropHeight);
 						if (bitmap != null) {
 							bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
-							//bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
+							bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
 							Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, null);
 						} else {
 							Plugin.instance.backToUnity(this);

@@ -46,13 +46,13 @@ public class CameraActivity extends Activity {
 				//				Bitmap bitmap = (Bitmap)bundle.get("data");
 				if (photoFile != null && photoFile.exists()) {
 					Uri photoUri = Uri.fromFile(photoFile); /*data.getData();*/
-					Log.e("capturedPhotoUri", (photoUri != null ? photoUri.toString() : ""));
+					Log.e("CameraActivity", "capturedPhotoUri:" + (photoUri != null ? photoUri.toString() : ""));
 					boolean cropLaunched = Plugin.instance.launchCropActivity(this, photoUri, true);
 					if (!cropLaunched) {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, photoUri, Plugin.cropWidth, Plugin.cropHeight);
 						if (bitmap != null) {
 							bitmap = Utils.cropMiddleRect(bitmap, Plugin.cropWidth, Plugin.cropHeight, true);
-							//bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
+							bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
 							Plugin.instance.backToUnity(this, Plugin.CAMERA_CALLBACK, bitmap, null);
 						} else {
 							Plugin.instance.backToUnity(this);
