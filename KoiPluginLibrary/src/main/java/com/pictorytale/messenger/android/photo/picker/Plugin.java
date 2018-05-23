@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 
@@ -95,7 +96,6 @@ public class Plugin {
 	 */
 	public void cleanUp(){
 		pluginData = null;
-		unityActivity = null;
 	}
 
 	/**
@@ -214,7 +214,11 @@ public class Plugin {
 	*/
 	public void backToUnity(Activity androidActivity){
 		Utils.hideProgressIndicator();
-		if (unityActivityClass == null && unityActivityClassName != null) {
+		Log.e(TAG, "backToUnity: unityActivityClass: " + unityActivityClass);
+		Log.e(TAG, "backToUnity: unityActivityClassName: " + unityActivityClassName);
+		if (unityActivityClass == null) {
+			if (unityActivityClassName == null)
+				unityActivityClassName = "com.pictorytale.messenger.android.PictoryTaleUnityPlayerActivity";
 			try {
 				unityActivityClass = Class.forName(unityActivityClassName);
 			} catch (ClassNotFoundException e) {
@@ -224,6 +228,7 @@ public class Plugin {
 		Log.e(TAG, "backToUnity: unityActivityClass: " + unityActivityClass);
 		Intent myIntent = new Intent(androidActivity, unityActivityClass);
 		androidActivity.startActivity(myIntent);
+		unityActivity = null;
 	}
 	
 	/**
