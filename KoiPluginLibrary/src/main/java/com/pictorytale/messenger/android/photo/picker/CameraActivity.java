@@ -47,7 +47,7 @@ public class CameraActivity extends Activity {
 				if (photoFile != null && photoFile.exists()) {
 					Uri photoUri = Uri.fromFile(photoFile); /*data.getData();*/
 					Log.e("capturedPhotoUri", (photoUri != null ? photoUri.toString() : ""));
-					boolean cropLaunched = Plugin.instance.launchCropActivity(null, photoUri);
+					boolean cropLaunched = Plugin.instance.launchCropActivity(this, photoUri, true);
 					if (!cropLaunched) {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, photoUri, Plugin.cropWidth, Plugin.cropHeight);
 						if (bitmap != null) {

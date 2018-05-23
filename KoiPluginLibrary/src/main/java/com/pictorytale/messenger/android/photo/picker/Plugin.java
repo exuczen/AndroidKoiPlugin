@@ -31,6 +31,8 @@ public class Plugin {
 	public static final String CAMERA_CALLBACK = "OnPickDoneFromCamera";
 	public static final String GALLERY_CALLBACK = "OnPickDoneFromGallery";
 
+	public static final String ORIGINAL_CONTEXT_CLASS_NAME = "originalContextClassName";
+
 	//The tag for debugging in LogCat
 	public static final String TAG = "PictoryTalePlugin";
 	
@@ -89,6 +91,7 @@ public class Plugin {
 	public void cleanUp(){
 		pluginData = null;
 		unityActivity = null;
+		instance.unityActivity = null;
 	}
 
 	/**
@@ -105,14 +108,14 @@ public class Plugin {
 	 * Open phone's gallery, this method is called in Unity
 	 */
 	public void launchGallery(Context context){
-		launchAndroidActivity(context,GalleryActivity.class );
+		launchAndroidActivity(context, GalleryActivity.class);
 	}
 
 	/**
 	 * Start phone's camera, this method is called in Unity
 	 */
 	public void launchCamera(Context context){
-		launchAndroidActivity(context,CameraActivity.class );
+		launchAndroidActivity(context, CameraActivity.class);
 	}
 
 	/**
@@ -123,8 +126,8 @@ public class Plugin {
 	}
 
 	public boolean launchActivityWithIntent(Context context, Class<?> activityClass) {
-		if (context == null)
-			context = unityActivity;
+		if (context == null && instance.unityActivity != null)
+			context = instance.unityActivity;
 		try {
 			Intent intent = new Intent(context, activityClass);
 			context.startActivity(intent);
@@ -137,17 +140,21 @@ public class Plugin {
 
 	private void launchAndroidActivity(Context context, Class<?> activityClass) {
 		this.unityActivity = context;
+		instance.unityActivity = context;
 		Intent myIntent = new Intent(context, activityClass);
 		context.startActivity(myIntent);
 	}
 
-	public boolean launchCropActivity(Context context, Uri uri) {
+	public boolean launchCropActivity(Context context, Uri uri, boolean startOnUnityActivityContext) {
 		cropActivityIsLaunching = true;
-		if (context == null)
-			context = unityActivity;
+		String originalContextClassName = context != null ? context.getClass().getName() : "";
+		if (context == null || (startOnUnityActivityContext && instance.unityActivity != null)) {
+			context = instance.unityActivity;
+		}
 		try {
 			Intent intent = new Intent(context, CropActivity.class);
 			intent.setData(uri);
+			intent.putExtra(Plugin.ORIGINAL_CONTEXT_CLASS_NAME, originalContextClassName);
 			context.startActivity(intent);
 			return true;
 		} catch (Exception e) {
@@ -202,8 +209,8 @@ public class Plugin {
 	*/
 	public void backToUnity(Activity androidActivity){
 		Utils.hideProgressIndicator();
-		Intent myIntent = new Intent(androidActivity, unityActivity.getClass());
-		unityActivity.startActivity(myIntent);
+		Intent myIntent = new Intent(androidActivity, instance.unityActivity.getClass());
+		instance.unityActivity.startActivity(myIntent);
 	}
 	
 	/**

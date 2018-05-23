@@ -19,12 +19,19 @@ public class CropActivity extends Activity {
 
     private File cropFile;
 
+    private String originalContextClassName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-        CropImageFromUri(getIntent().getData());
+        Intent intent = getIntent();
+        if (intent.hasExtra(Plugin.ORIGINAL_CONTEXT_CLASS_NAME)) {
+            originalContextClassName = intent.getStringExtra(Plugin.ORIGINAL_CONTEXT_CLASS_NAME);
+        }
+        Log.e("CropActivity.onCreate", "originalContextClassName=" + originalContextClassName);
+        CropImageFromUri(intent.getData());
         Plugin.cropActivityIsLaunching = false;
     }
 
@@ -70,13 +77,20 @@ public class CropActivity extends Activity {
                     }
                 }
             }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            //User cancelled the picker. We don't have anything to crop
-            super.onActivityResult(requestCode, resultCode, data);
-            Plugin.instance.launchActivityWithIntent(null, GalleryActivity.class);
         } else {
-            super.onActivityResult(requestCode, resultCode, data);
-            Plugin.instance.launchActivityWithIntent(null, GalleryActivity.class);
+            Class destClass;
+            if (originalContextClassName != null && originalContextClassName.equals(CameraActivity.class.getName()))
+                destClass = CameraActivity.class;
+            else
+                destClass = GalleryActivity.class;
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //User cancelled the picker. We don't have anything to crop
+                super.onActivityResult(requestCode, resultCode, data);
+                Plugin.instance.launchActivityWithIntent(this, destClass);
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+                Plugin.instance.launchActivityWithIntent(this, destClass);
+            }
         }
     }
 

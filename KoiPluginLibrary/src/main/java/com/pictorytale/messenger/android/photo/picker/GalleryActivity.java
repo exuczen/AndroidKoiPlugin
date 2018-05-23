@@ -49,7 +49,7 @@ public class GalleryActivity extends Activity {
 				if (copiedFile.exists()) {
 					Uri copiedFileUri = Uri.fromFile(copiedFile);
 					Log.e("copiedFile","copiedFileUri="+copiedFileUri);
-					boolean cropLaunched = Plugin.instance.launchCropActivity(null, copiedFileUri);
+					boolean cropLaunched = Plugin.instance.launchCropActivity(this, copiedFileUri, true);
 					Utils.hideProgressIndicator();
 					if (!cropLaunched) {
 						Bitmap bitmap = Utils.decodeSampledBitmapFromUri(this, copiedFileUri, Plugin.cropWidth, Plugin.cropHeight);
