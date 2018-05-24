@@ -64,20 +64,20 @@ public class GalleryActivity extends Activity {
 							bitmap = Utils.scaleBitmapToSize(bitmap, Plugin.cropWidth, Plugin.cropHeight, false);
 							Plugin.instance.backToUnity(this, Plugin.GALLERY_CALLBACK, bitmap, null);
 						} else {
-							Plugin.instance.backToUnity(this);
+							Plugin.instance.backToUnityWithCancel(this);
 						}
 					}
 				} else {
-					Plugin.instance.backToUnity(this);
+					Plugin.instance.backToUnityWithCancel(this);
 				}
 			}
 
 		} else if (resultCode == RESULT_CANCELED) {
 			super.onActivityResult(requestCode, resultCode, data);
-			Plugin.instance.backToUnity(this);
+			Plugin.instance.backToUnityWithCancel(this);
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
-			Plugin.instance.backToUnity(this);
+			Plugin.instance.backToUnityWithCancel(this);
 		}
 	}
 

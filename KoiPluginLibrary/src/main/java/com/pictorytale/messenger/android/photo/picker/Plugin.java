@@ -32,6 +32,7 @@ public class Plugin {
 	public static final String CROP_CALLBACK = "OnCropDone";
 	public static final String CAMERA_CALLBACK = "OnPickDoneFromCamera";
 	public static final String GALLERY_CALLBACK = "OnPickDoneFromGallery";
+	public static final String CANCEL_CALLBACK = "OnCancel";
 
 	public static final String ORIGINAL_CONTEXT_CLASS_NAME = "originalContextClassName";
 
@@ -172,7 +173,7 @@ public class Plugin {
 	public void backToUnity(Activity context, String method, Bitmap bitmap, Uri fileUri) {
 		if (bitmap == null)
 		{
-			backToUnity(context);
+			backToUnityWithCancel(context);
 		}
 		else
 		{
@@ -210,9 +211,17 @@ public class Plugin {
 	}
 
 	/**
+	 * Go back to Unity (from Android Activity) with cancel action
+	 */
+	public void backToUnityWithCancel(Activity androidActivity) {
+		Plugin.sendMessageToUnityObject(CANCEL_CALLBACK, "");
+		backToUnity(androidActivity);
+	}
+
+	/**
 	* Go back to Unity (from Android Activity)
 	*/
-	public void backToUnity(Activity androidActivity){
+	private void backToUnity(Activity androidActivity) {
 		Utils.hideProgressIndicator();
 		Log.e(TAG, "backToUnity: unityActivityClass: " + unityActivityClass);
 		Log.e(TAG, "backToUnity: unityActivityClassName: " + unityActivityClassName);

@@ -2,7 +2,6 @@ package com.pictorytale.messenger.android.photo.picker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -73,7 +72,7 @@ public class CropActivity extends Activity {
                     if (bitmap != null) {
                         Plugin.instance.backToUnity(this, Plugin.CROP_CALLBACK, bitmap, Uri.fromFile(cropFile));
                     } else {
-                        Plugin.instance.backToUnity(this);
+                        Plugin.instance.backToUnityWithCancel(this);
                     }
                 }
             }
