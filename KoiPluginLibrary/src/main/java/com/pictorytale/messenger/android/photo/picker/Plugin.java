@@ -214,7 +214,7 @@ public class Plugin {
 	 * Go back to Unity (from Android Activity) with cancel action
 	 */
 	public void backToUnityWithCancel(Activity androidActivity) {
-		Plugin.sendMessageToUnityObject(CANCEL_CALLBACK, "");
+		Plugin.sendMessageToUnityObject(CANCEL_CALLBACK, androidActivity.getClass().getName());
 		backToUnity(androidActivity);
 	}
 
